@@ -47,7 +47,31 @@ public class ProdutosDAO {
         }
     }
 
-        
+    public void venderProduto(int id) {
+        String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
+        try {
+            conn = new conectaDAO().connectDB();
+            prep = conn.prepareStatement(sql);
+            prep.setInt(1, id);
+
+            int rowsAffected = prep.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Produto vendido com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Produto não encontrado.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao vender produto: " + e.getMessage());
+        } finally {
+            try {
+                if (prep != null) prep.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Erro ao fechar conexão: " + e.getMessage());
+            }
+        }
+    }
+    
        
     public ArrayList<ProdutosDTO> listarProdutos(){
         String sql = "SELECT * FROM produtos";
@@ -80,9 +104,6 @@ public class ProdutosDAO {
         }
         return listagem;
     }
-    
-    
-    
-        
+         
 }
 
